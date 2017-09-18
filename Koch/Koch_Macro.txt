@@ -1,0 +1,119 @@
+Sub Koch()
+  
+    Pi = 3.1415926
+    
+    l = 400
+    
+    
+    Set myDocument = ThisDocument
+    
+    Do
+        myDocument.Shapes.SelectAll
+        Selection.Delete
+        
+        x1 = 100: y1 = 200      '起始位置
+        
+        With myDocument.Shapes.BuildFreeform(msoEditingAuto, x1, y1)
+        
+        m = Val(InputBox("输入阶数"))
+        h = l * (1 / 3) ^ m     '每段长
+        
+        For i = 0 To 4 ^ m - 1
+            
+            Application.StatusBar = "正在画第" & i & "根线段"
+            
+            s = 0
+            n = i
+            
+            While n <> 0
+                
+                t = n Mod 4
+                s = s + (t + 1) Mod 3 - 1
+                
+                n = n \ 4
+            Wend
+            
+            x2 = x1 + h * Cos(-Pi * s / 3)
+            y2 = y1 + h * Sin(-Pi * s / 3)
+            
+            .AddNodes msoSegmentCurve, msoEditingCorner, x2, y2
+            
+            
+            
+            DoEvents
+            
+            x1 = x2
+            y1 = y2
+        
+        Next i
+        
+        '------------
+        j = i
+        
+        For i = 0 To 4 ^ m - 1
+            
+            Application.StatusBar = "正在画第" & j + i & "根线段"
+            
+            s = -2
+            n = i
+            
+            While n <> 0
+                
+                t = n Mod 4
+                s = s + (t + 1) Mod 3 - 1
+                
+                n = n \ 4
+            Wend
+            
+            x2 = x1 + h * Cos(-Pi * s / 3)
+            y2 = y1 + h * Sin(-Pi * s / 3)
+            
+            .AddNodes msoSegmentCurve, msoEditingCorner, x2, y2
+            
+            
+            DoEvents
+            
+            x1 = x2
+            y1 = y2
+        
+        Next i
+        
+        '------------
+        
+        For i = 0 To 4 ^ m - 1
+            
+            Application.StatusBar = "正在画第" & 2 * j + i & "根线段"
+            
+            s = 2
+            n = i
+            
+            While n <> 0
+                
+                t = n Mod 4
+                s = s + (t + 1) Mod 3 - 1
+                
+                n = n \ 4
+            Wend
+            
+            x2 = x1 + h * Cos(-Pi * s / 3)
+            y2 = y1 + h * Sin(-Pi * s / 3)
+            
+            .AddNodes msoSegmentCurve, msoEditingCorner, x2, y2
+            
+            
+            DoEvents
+            
+            x1 = x2
+            y1 = y2
+        
+        Next i
+        
+        .ConvertToShape
+        End With
+        
+        Application.StatusBar = ""
+    
+    Loop While (MsgBox(m & "阶Koch曲线", vbYesNo, "继续模拟吗？") = vbYes)
+
+End Sub
+
